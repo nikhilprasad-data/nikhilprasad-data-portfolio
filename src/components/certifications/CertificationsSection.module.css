@@ -1,0 +1,224 @@
+/* src/components/certifications/CertificationsSection.module.css */
+
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.header {
+  max-width: 600px;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--text-primary);
+}
+
+.accent {
+  color: var(--accent-green);
+  font-style: italic;
+}
+
+/* Cert grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+
+/* Cert card */
+.certCard {
+  position: relative;
+}
+
+.certFrame {
+  position: relative;
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-lg);
+  background: rgba(14, 14, 14, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color var(--transition-base), background var(--transition-base);
+  display: flex;
+  flex-direction: column;
+}
+
+.certCard:hover .certFrame {
+  border-color: var(--border-green);
+  background: rgba(61, 255, 160, 0.02);
+}
+
+/* Corner decorations */
+.certFrameCornerTL,
+.certFrameCornerBR {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--accent-green);
+  border-style: solid;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.certFrameCornerTL {
+  top: 8px;
+  left: 8px;
+  border-width: 1px 0 0 1px;
+}
+
+.certFrameCornerBR {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 1px 1px 0;
+}
+
+.certCard:hover .certFrameCornerTL,
+.certCard:hover .certFrameCornerBR {
+  opacity: 1;
+}
+
+/* Cert content */
+.certContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  height: 100%;
+}
+
+.certIndex {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-green);
+}
+
+.certBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.certTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.certIssuer {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.certMeta {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.certDate {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent-green);
+  letter-spacing: 0.08em;
+}
+
+.certId {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+}
+
+.certLink {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--transition-base);
+  align-self: flex-start;
+}
+
+.certLink:hover {
+  color: var(--accent-green);
+}
+
+/* Card shimmer glow */
+.certGlow {
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(
+    135deg,
+    rgba(61, 255, 160, 0) 0%,
+    rgba(61, 255, 160, 0.04) 50%,
+    rgba(61, 255, 160, 0) 100%
+  );
+  background-size: 200% 200%;
+  animation: shimmer 4s linear infinite;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.certCard:hover .certGlow {
+  opacity: 1;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 200%; }
+  100% { background-position: -200% -200%; }
+}
+
+/* BG glow */
+.bgGlow {
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(61, 255, 160, 0.04) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: var(--space-xl) var(--space-md);
+  }
+}

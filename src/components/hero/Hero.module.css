@@ -1,0 +1,321 @@
+/* src/components/hero/Hero.module.css */
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+/* 3D Scene Layer */
+.sceneWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.scenePlaceholder {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(61,255,160,0.06) 0%, transparent 70%);
+}
+
+/* Grid overlay */
+.gridOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+/* Radial glow from center-right */
+.radialGlow {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(ellipse 55% 70% at 72% 45%, rgba(61,255,160,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Bottom fade into next section */
+.bottomFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  z-index: 3;
+  background: linear-gradient(to bottom, transparent, var(--bg-primary));
+  pointer-events: none;
+}
+
+/* Content */
+.content {
+  position: relative;
+  z-index: 4;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+  padding-top: 100px;
+  padding-bottom: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-lg);
+}
+
+/* Headline */
+.headline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-family: var(--font-display);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  will-change: transform;
+}
+
+.headlineLine {
+  display: block;
+  font-size: clamp(4rem, 9.5vw, 9.5rem);
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.headlineSmall {
+  display: block;
+  font-size: clamp(1.1rem, 2.2vw, 2rem);
+  font-weight: 300;
+  color: var(--text-tertiary);
+  letter-spacing: -0.01em;
+  margin-top: 16px;
+  font-style: normal;
+}
+
+.accent {
+  font-style: italic;
+  color: var(--accent-green);
+  font-weight: 300;
+}
+
+/* Subtext */
+.subtext {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 460px;
+}
+
+.br {
+  display: block;
+}
+
+/* CTAs */
+.ctas {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-sm);
+}
+
+.ctaPrimary {
+  background: var(--accent-green);
+  color: var(--bg-primary);
+  border-color: var(--accent-green);
+}
+
+.ctaPrimary:hover {
+  background: transparent;
+  color: var(--accent-green);
+  box-shadow: 0 0 30px var(--accent-green-glow2);
+}
+
+.ctaGhost {
+  border-color: var(--border-medium);
+  color: var(--text-secondary);
+}
+
+.ctaGhost:hover {
+  border-color: var(--border-green);
+  color: var(--accent-green);
+}
+
+/* Social links row */
+.socials {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.socialLink:hover {
+  color: var(--accent-green);
+}
+
+.socialIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Profile Photo Placeholder */
+.photoPlaceholder {
+  position: absolute;
+  right: clamp(40px, 8vw, 140px);
+  top: 50%;
+  transform: translateY(-46%);
+  z-index: 5;
+}
+
+.photoFrame {
+  position: relative;
+  width: clamp(180px, 22vw, 340px);
+  aspect-ratio: 3 / 4;
+}
+
+.photoInner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, rgba(61,255,160,0.04) 0%, rgba(8,8,8,0.6) 100%);
+  border: 1px solid var(--border-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.photoInner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(61,255,160,0.04) 100%);
+}
+
+.photoLabel {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.photoGlow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse at center, rgba(61,255,160,0.1) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.photoBorder {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: -8px;
+  bottom: -8px;
+  border: 1px solid var(--border-subtle);
+  pointer-events: none;
+}
+
+/* Scroll Indicator */
+.scrollIndicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: fadeInUp 1.5s var(--ease-out-expo) 1s both;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--accent-green));
+  animation: scrollPulse 2.4s ease-in-out infinite;
+}
+
+.scrollLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+@keyframes scrollPulse {
+  0% { opacity: 0.3; transform: scaleY(0.7); transform-origin: top; }
+  50% { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0.3; transform: scaleY(0.7); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .photoPlaceholder {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    width: clamp(120px, 40vw, 200px);
+    margin-top: var(--space-lg);
+  }
+
+  .photoFrame {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 0 var(--space-md);
+    padding-top: 90px;
+    padding-bottom: 80px;
+  }
+
+  .headlineLine {
+    font-size: clamp(2.8rem, 12vw, 5rem);
+  }
+
+  .headlineSmall {
+    font-size: clamp(0.85rem, 4vw, 1.1rem);
+  }
+
+  .photoPlaceholder {
+    display: none;
+  }
+
+  .subtext .br {
+    display: none;
+  }
+}

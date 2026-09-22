@@ -1,0 +1,101 @@
+/* src/components/skills/SkillsSection.module.css */
+
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+}
+
+.sectionHeader {
+  position: absolute;
+  top: 28px;
+  left: var(--space-xl);
+  z-index: 10;
+}
+
+.sceneWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.scenePlaceholder {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(61,255,160,0.05) 0%, transparent 65%);
+}
+
+.textOverlay {
+  position: relative;
+  z-index: 5;
+  padding: 0 var(--space-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  pointer-events: none;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: var(--text-primary);
+}
+
+.accent {
+  color: var(--accent-green);
+  font-style: italic;
+}
+
+.sub {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  max-width: 380px;
+  line-height: 1.6;
+}
+
+.topFade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  z-index: 4;
+  background: linear-gradient(to bottom, var(--bg-primary), transparent);
+  pointer-events: none;
+}
+
+.bottomFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  z-index: 4;
+  background: linear-gradient(to top, var(--bg-primary), transparent);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .sectionHeader {
+    left: var(--space-md);
+  }
+
+  .textOverlay {
+    padding: 0 var(--space-md);
+  }
+
+  .headline {
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
+  }
+}

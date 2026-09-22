@@ -1,0 +1,683 @@
+/* src/components/about/AboutSection.module.css */
+
+.section {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--bg-primary);
+  padding: var(--space-2xl) 0;
+}
+
+/* Reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal:nth-child(2) { transition-delay: 100ms; }
+.reveal:nth-child(3) { transition-delay: 200ms; }
+.reveal:nth-child(4) { transition-delay: 300ms; }
+.reveal:nth-child(5) { transition-delay: 400ms; }
+.reveal:nth-child(6) { transition-delay: 500ms; }
+
+.visible .reveal,
+.section.visible .reveal,
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Grid Layout */
+.grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-xl);
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Left */
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--text-primary);
+}
+
+.accent {
+  color: var(--accent-green);
+  font-style: italic;
+}
+
+.divider {
+  width: 48px;
+  height: 1px;
+  background: var(--border-green);
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  line-height: 1.75;
+  color: var(--text-secondary);
+  max-width: 480px;
+}
+
+/* Right */
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  align-items: center;
+  /* overflow: default (visible) — must not be set to hidden */
+}
+
+/* ── Core Scene ─────────────────────────────────────────────────────
+   Coordinate system for the vertical core box and its external orbital.
+   Establishes the stacking context: orbital (z:1) → plate (z:2) → box (z:3).
+   --core-w / --core-h are shared tokens consumed by both .contentBox
+   and .backgroundPlate so they can never drift apart.
+   ──────────────────────────────────────────────────────────────── */
+.coreScene {
+  --core-w: clamp(250px, 19vw, 270px);
+  --core-h: clamp(400px, 33vw, 440px);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Large enough to contain outer ring (r2=360px) + label overflow.
+     Width estimate: 2×360 + ~100px label space = ~820px.
+     Height estimate: 2×(360×cos23°≈331) + ~60px = ~722px.
+     Starting values — verify against actual browser composition. */
+  width: 820px;
+  height: 720px;
+  max-width: 100%;
+  overflow: visible;
+}
+
+/* Background plate — dark occluder that blocks orbital ring lines which
+   would otherwise be visible through the core box's near-transparent bg.
+   Sits between orbital (z:1) and core box (z:3).
+   Synchronized via --core-w / --core-h — never independently maintained. */
+.backgroundPlate {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--core-w);
+  height: var(--core-h);
+  background: rgba(8, 8, 8, 0.65);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Content Box — engineering identity area */
+.contentBox {
+  position: relative;
+  width: var(--core-w);          /* was: 100% — portrait-oriented via shared token */
+  min-height: var(--core-h);     /* was: 280px — taller via shared token */
+  z-index: 3;                    /* NEW — above backgroundPlate (z:2) and orbital (z:1) */
+  border: 1px solid var(--border-green);
+  background: rgba(61, 255, 160, 0.012);
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  animation: boxBreathe 5s ease-in-out infinite;
+}
+
+/* Inner atmospheric haze — energy from center */
+.contentBox::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 72% 56% at 50% 50%,
+    rgba(61, 255, 160, 0.04) 0%,
+    transparent 68%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: hazeBreath 5s ease-in-out infinite;
+}
+
+/* Outer atmospheric halo — static gradient that extends beyond box border */
+.contentBox::after {
+  content: '';
+  position: absolute;
+  inset: -30px;
+  background: radial-gradient(
+    ellipse 90% 80% at 50% 50%,
+    rgba(61, 255, 160, 0.022) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contentBoxCornerTL,
+.contentBoxCornerBR {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent-green);
+  border-style: solid;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.contentBoxCornerTL {
+  top: 10px;
+  left: 10px;
+  border-width: 1px 0 0 1px;
+}
+
+.contentBoxCornerBR {
+  bottom: 10px;
+  right: 10px;
+  border-width: 0 1px 1px 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ENERGY PARTICLE SYSTEM
+   All particles originate from the box perimeter.
+   Each .pN class sets position + custom properties consumed
+   by @keyframes particleDrift via var().
+   ──────────────────────────────────────────────────────────── */
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent-green);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  animation-name: particleDrift;
+  animation-duration: 3.8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: backwards;
+}
+
+/* Top edge — 4 particles */
+.p0  { left: 15%;  top: 0;      width: 2px;   height: 2px;   --tx: -10px; --ty: -30px; --p-opacity: 0.6;  animation-delay: 0s;   }
+.p1  { left: 38%;  top: 0;      width: 1.5px; height: 1.5px; --tx: 5px;   --ty: -32px; --p-opacity: 0.5;  animation-delay: 1.2s; }
+.p2  { left: 62%;  top: 0;      width: 2.5px; height: 2.5px; --tx: -4px;  --ty: -28px; --p-opacity: 0.7;  animation-delay: 0.6s; }
+.p3  { left: 82%;  top: 0;      width: 1.5px; height: 1.5px; --tx: 8px;   --ty: -26px; --p-opacity: 0.45; animation-delay: 2.0s; }
+
+/* Right edge — 4 particles */
+.p4  { right: 0;   top: 20%;    width: 2px;   height: 2px;   --tx: 30px;  --ty: -6px;  --p-opacity: 0.55; animation-delay: 0.9s; }
+.p5  { right: 0;   top: 42%;    width: 1.5px; height: 1.5px; --tx: 28px;  --ty: 5px;   --p-opacity: 0.65; animation-delay: 2.4s; }
+.p6  { right: 0;   top: 63%;    width: 2.5px; height: 2.5px; --tx: 32px;  --ty: -4px;  --p-opacity: 0.5;  animation-delay: 1.5s; }
+.p7  { right: 0;   top: 82%;    width: 1.5px; height: 1.5px; --tx: 26px;  --ty: 7px;   --p-opacity: 0.6;  animation-delay: 0.3s; }
+
+/* Bottom edge — 4 particles */
+.p8  { left: 18%;  bottom: 0;   width: 2px;   height: 2px;   --tx: -6px;  --ty: 30px;  --p-opacity: 0.5;  animation-delay: 1.8s; }
+.p9  { left: 42%;  bottom: 0;   width: 1.5px; height: 1.5px; --tx: 7px;   --ty: 28px;  --p-opacity: 0.65; animation-delay: 0.5s; }
+.p10 { left: 65%;  bottom: 0;   width: 2.5px; height: 2.5px; --tx: -3px;  --ty: 32px;  --p-opacity: 0.55; animation-delay: 2.7s; }
+.p11 { left: 85%;  bottom: 0;   width: 1.5px; height: 1.5px; --tx: 5px;   --ty: 26px;  --p-opacity: 0.45; animation-delay: 1.0s; }
+
+/* Left edge — 4 particles */
+.p12 { left: 0;    top: 18%;    width: 2px;   height: 2px;   --tx: -28px; --ty: -7px;  --p-opacity: 0.6;  animation-delay: 2.2s; }
+.p13 { left: 0;    top: 38%;    width: 1.5px; height: 1.5px; --tx: -30px; --ty: 6px;   --p-opacity: 0.5;  animation-delay: 0.7s; }
+.p14 { left: 0;    top: 60%;    width: 2.5px; height: 2.5px; --tx: -26px; --ty: -4px;  --p-opacity: 0.7;  animation-delay: 1.7s; }
+.p15 { left: 0;    top: 80%;    width: 1.5px; height: 1.5px; --tx: -32px; --ty: 5px;   --p-opacity: 0.55; animation-delay: 3.1s; }
+
+/* Extended ambient particles — 2 per edge, slower drift (5.2s) for layered depth */
+.p16 { left: 25%;  top: 0;    width: 2px; height: 2px; --tx: -7px;  --ty: -36px; --p-opacity: 0.38; animation-delay: 1.4s; animation-duration: 5.2s; }
+.p17 { left: 72%;  top: 0;    width: 1px; height: 1px; --tx: 3px;   --ty: -34px; --p-opacity: 0.32; animation-delay: 3.8s; animation-duration: 5.2s; }
+.p18 { right: 0;   top: 30%;  width: 2px; height: 2px; --tx: 34px;  --ty: -3px;  --p-opacity: 0.38; animation-delay: 0.4s; animation-duration: 5.2s; }
+.p19 { right: 0;   top: 72%;  width: 1px; height: 1px; --tx: 30px;  --ty: 4px;   --p-opacity: 0.32; animation-delay: 2.8s; animation-duration: 5.2s; }
+.p20 { left: 30%;  bottom: 0; width: 2px; height: 2px; --tx: -4px;  --ty: 34px;  --p-opacity: 0.38; animation-delay: 1.6s; animation-duration: 5.2s; }
+.p21 { left: 75%;  bottom: 0; width: 1px; height: 1px; --tx: 4px;   --ty: 30px;  --p-opacity: 0.32; animation-delay: 3.4s; animation-duration: 5.2s; }
+.p22 { left: 0;    top: 28%;  width: 2px; height: 2px; --tx: -34px; --ty: -3px;  --p-opacity: 0.38; animation-delay: 0.8s; animation-duration: 5.2s; }
+.p23 { left: 0;    top: 70%;  width: 1px; height: 1px; --tx: -30px; --ty: 4px;   --p-opacity: 0.32; animation-delay: 2.6s; animation-duration: 5.2s; }
+
+/* ── Keyframes ──────────────────────────────────────────────── */
+
+/* Border glow — 3 shadow layers breathe together */
+@keyframes boxBreathe {
+  0%, 100% {
+    box-shadow:
+      inset 0 0 20px rgba(61, 255, 160, 0.05),
+      0 0 28px rgba(61, 255, 160, 0.075),
+      0 0 60px rgba(61, 255, 160, 0.028);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 32px rgba(61, 255, 160, 0.09),
+      0 0 44px rgba(61, 255, 160, 0.13),
+      0 0 90px rgba(61, 255, 160, 0.055);
+  }
+}
+
+/* Inner haze — slow opacity pulse */
+@keyframes hazeBreath {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1;   }
+}
+
+/*
+  Particle lifecycle:
+    0%  — at border, invisible
+    8%  — 8% of travel (≈2–3 px from border), peak opacity
+    55% — opacity fades to 0 (still moving)
+    100%— at full travel distance, invisible; loop resets to border
+
+  --tx / --ty are resolved per-element from each .pN class.
+  linear timing ensures position is strictly proportional to time,
+  so 8% time = 8% of travel distance (particle appears near border).
+*/
+@keyframes particleDrift {
+  0% {
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  8% {
+    transform: translate(
+      calc(-50% + var(--tx) * 0.08),
+      calc(-50% + var(--ty) * 0.08)
+    );
+    opacity: var(--p-opacity);
+  }
+  55% { opacity: 0; }
+  100% {
+    transform: translate(
+      calc(-50% + var(--tx)),
+      calc(-50% + var(--ty))
+    );
+    opacity: 0;
+  }
+}
+
+/* ── Reduced motion — disable all energy and orbital animations ──── */
+@media (prefers-reduced-motion: reduce) {
+  .contentBox         { animation: none; }
+  .contentBox::before { animation: none; }
+  .contentBox::after  { animation: none; }
+  .energyAura         { animation: none; }
+  .particle           { display: none;   }
+  .ringRotation1,
+  .ringRotation2      { animation: none; }
+  .nc1                { animation: none; transform: translate(-50%, -50%); }
+  .nc2                { animation: none; transform: translate(-50%, -50%); }
+  .nodeDot::after,
+  .nodeDot2::after    { animation: none; display: none; }
+}
+
+/* ── Energy aura ──────────────────────────────────────────── */
+
+/* Outer atmospheric corona — extends beyond box border, animated separately from ::after */
+.energyAura {
+  position: absolute;
+  inset: -20px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 0;
+  animation: auraBreathe 8s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ORBITAL TECHNOLOGY SYSTEM
+   One responsibility per DOM layer — transforms never conflict:
+     ringPlane    → perspective + rotateX  (STATIC, no animation)
+     ringRotation → spin only              (rotate in tilted plane)
+     nodePosition → circumference anchor  (STATIC per node)
+     nodeContent  → counter-spin only      (cancels parent spin)
+     nodeDot / nodeLabel → visual output
+   ─────────────────────────────────────────────────────────── */
+
+/* Zero-size anchor point centered on coreScene — aligns with contentBox center
+   since contentBox is flex-centered inside coreScene */
+.orbitalWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 1;   /* was: 3 — below backgroundPlate (z:2) and contentBox (z:3) */
+}
+
+/* ── Ring 1 — inner orbit (Python · FastAPI · LangChain) ────── */
+
+.ringPlane1 {
+  --r1: 280px;          /* was: 170px — enlarged to surround vertical core box */
+  position: absolute;
+  width: calc(2 * var(--r1));
+  height: calc(2 * var(--r1));
+  top: calc(-1 * var(--r1));
+  left: calc(-1 * var(--r1));
+  transform: perspective(800px) rotateX(22deg);  /* was: 600px/65deg — shallow 3D tilt */
+  /* ↑ STATIC — no animation property on this element */
+}
+
+.ringRotation1 {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(61, 255, 160, 0.14);
+  animation: spin 28s linear infinite;
+  will-change: transform;
+}
+
+/* Node positions — 3 nodes, 120° apart around ring 1 */
+.np0 { position: absolute; top: 50%; left: 50%; transform: rotate(0deg)   translateX(var(--r1)) rotate(0deg);    }
+.np1 { position: absolute; top: 50%; left: 50%; transform: rotate(120deg) translateX(var(--r1)) rotate(-120deg); }
+.np2 { position: absolute; top: 50%; left: 50%; transform: rotate(240deg) translateX(var(--r1)) rotate(-240deg); }
+
+/* Counter-spin — ring 1 is CW; content spins CCW to keep labels upright */
+.nc1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  animation: counterSpin1 28s linear infinite;
+  will-change: transform;
+}
+
+/* ── Ring 2 — outer orbit (LangGraph · AI · Data Science) ── */
+
+.ringPlane2 {
+  --r2: 360px;          /* was: 230px — enlarged for outer visual separation */
+  position: absolute;
+  width: calc(2 * var(--r2));
+  height: calc(2 * var(--r2));
+  top: calc(-1 * var(--r2));
+  left: calc(-1 * var(--r2));
+  transform: perspective(800px) rotateX(23deg);  /* was: 600px/68deg */
+  /* ↑ STATIC — no animation property on this element */
+}
+
+.ringRotation2 {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(61, 255, 160, 0.08);
+  animation: spin 44s linear infinite;
+  animation-direction: reverse;
+  will-change: transform;
+}
+
+/* Node positions — 3 nodes, 120° apart, 60° offset from ring 1 */
+.np3 { position: absolute; top: 50%; left: 50%; transform: rotate(60deg)  translateX(var(--r2)) rotate(-60deg);  }
+.np4 { position: absolute; top: 50%; left: 50%; transform: rotate(180deg) translateX(var(--r2)) rotate(-180deg); }
+.np5 { position: absolute; top: 50%; left: 50%; transform: rotate(300deg) translateX(var(--r2)) rotate(-300deg); }
+
+/* Counter-spin — ring 2 is CCW; content spins CW to keep labels upright */
+.nc2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  animation: counterSpin2 44s linear infinite;
+  will-change: transform;
+}
+
+/* ── Node visuals — ring 1 ────────────────────────────── */
+
+.nodeDot {
+  display: block;
+  position: relative;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 6px 2px rgba(61, 255, 160, 0.45);
+  flex-shrink: 0;
+}
+
+/* Pulse ring centered on dot via translate in keyframe */
+.nodeDot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(61, 255, 160, 0.35);
+  animation: nodePulse 3s ease-out infinite backwards;
+}
+
+.nodeLabel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  opacity: 0.88;
+  white-space: nowrap;
+  padding: 2px 7px;
+  border: 1px solid rgba(61, 255, 160, 0.22);
+  background: rgba(8, 8, 8, 0.82);
+}
+
+/* ── Node visuals — ring 2 (more receded) ──────────────── */
+
+.nodeDot2 {
+  display: block;
+  position: relative;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: 0 0 5px 1px rgba(61, 255, 160, 0.35);
+  flex-shrink: 0;
+}
+
+.nodeDot2::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(61, 255, 160, 0.28);
+  animation: nodePulse 3.5s ease-out infinite backwards;
+}
+
+.nodeLabel2 {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-green);
+  opacity: 0.7;
+  white-space: nowrap;
+  padding: 2px 6px;
+  border: 1px solid rgba(61, 255, 160, 0.16);
+  background: rgba(8, 8, 8, 0.82);
+}
+
+/* ── Per-node pulse stagger ───────────────────────────── */
+.np0 .nodeDot::after  { animation-delay: 0s;   }
+.np1 .nodeDot::after  { animation-delay: 1s;   }
+.np2 .nodeDot::after  { animation-delay: 2s;   }
+.np3 .nodeDot2::after { animation-delay: 0.5s; }
+.np4 .nodeDot2::after { animation-delay: 1.5s; }
+.np5 .nodeDot2::after { animation-delay: 2.5s; }
+
+/* ── Orbital + energy keyframes ─────────────────────────── */
+
+/*
+  spin: shared keyframe for both rings.
+  ringRotation1 uses it forward (CW).
+  ringRotation2 uses it with animation-direction: reverse (CCW).
+  Only writes rotate() — the parent ringPlane's rotateX is never touched.
+*/
+@keyframes spin {
+  from { transform: rotate(0deg);   }
+  to   { transform: rotate(360deg); }
+}
+
+/*
+  counterSpin1: ring 1 is CW (+360°) → content is CCW (-360°).
+  translate(-50%, -50%) centers nc1 on its anchor at all times.
+*/
+@keyframes counterSpin1 {
+  from { transform: translate(-50%, -50%) rotate(0deg);    }
+  to   { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+
+/*
+  counterSpin2: ring 2 is CCW (-360°) → content is CW (+360°).
+  translate(-50%, -50%) centers nc2 on its anchor at all times.
+*/
+@keyframes counterSpin2 {
+  from { transform: translate(-50%, -50%) rotate(0deg);   }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/*
+  nodePulse: applied to ::after pseudo-element of nodeDot/nodeDot2.
+  translate(-50%, -50%) keeps the pulse ring centered on the dot
+  throughout scale. animation-fill-mode: backwards (set on element)
+  ensures centering is applied during any animation-delay period.
+*/
+@keyframes nodePulse {
+  0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(2.8); opacity: 0;   }
+}
+
+/* Outer energy corona — 8s phase offset from boxBreathe (5s) for organic rhythm */
+@keyframes auraBreathe {
+  0%, 100% { box-shadow: 0 0 60px 12px rgba(61, 255, 160, 0.028); }
+  50%       { box-shadow: 0 0 85px 20px rgba(61, 255, 160, 0.048); }
+}
+
+/* Background geometric elements */
+.geoBg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.geoLine1 {
+  position: absolute;
+  top: 20%;
+  left: -5%;
+  width: 40%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(61,255,160,0.08), transparent);
+}
+
+.geoLine2 {
+  position: absolute;
+  bottom: 25%;
+  right: -5%;
+  width: 35%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+}
+
+.geoCircle {
+  position: absolute;
+  bottom: -15%;
+  right: -8%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(61,255,160,0.04);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────
+   All breakpoints override --core-w / --core-h on .coreScene.
+   Both .contentBox and .backgroundPlate inherit the new values automatically.
+   Radii are starting values — increase if ring intersects core visually.
+   ──────────────────────────────────────────────────────────────── */
+
+/* 1280px — laptop: narrower grid columns, reduce coreScene + orbital */
+@media (max-width: 1280px) {
+  .coreScene {
+    --core-w: clamp(230px, 18vw, 250px);
+    --core-h: clamp(370px, 30vw, 410px);
+    width: 700px;
+    height: 640px;
+  }
+  .ringPlane1 { --r1: 260px; }
+  .ringPlane2 { --r2: 330px; }
+}
+
+/* 1024px — single column layout */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .right {
+    flex-direction: column;
+    align-items: center;    /* was: stretch — center coreScene in single column */
+  }
+
+  .coreScene {
+    --core-w: clamp(220px, 22vw, 240px);
+    --core-h: clamp(340px, 35vw, 380px);
+    width: 580px;
+    height: 560px;
+  }
+  .ringPlane1 { --r1: 240px; }
+  .ringPlane2 { --r2: 300px; }
+  .nodeLabel  { font-size: 0.58rem; }
+  .nodeLabel2 { font-size: 0.54rem; }
+}
+
+/* 768px — mobile */
+@media (max-width: 768px) {
+  .grid {
+    padding: 0 var(--space-md);
+  }
+
+  .right {
+    flex-direction: column;
+  }
+
+  .coreScene {
+    --core-w: clamp(180px, 55vw, 220px);
+    --core-h: clamp(280px, 80vw, 330px);
+    width: 440px;
+    height: 440px;
+    max-width: calc(100vw - 32px);  /* prevents horizontal page scroll */
+  }
+  .ringPlane1 { --r1: 210px; }
+  .ringPlane2 { --r2: 265px; }
+
+  /* Labels hidden at mobile — preserved existing behavior */
+  .nodeLabel,
+  .nodeLabel2 { display: none; }
+  .nodeDot::after,
+  .nodeDot2::after { display: none; }
+  .ringRotation1 { border-color: rgba(61, 255, 160, 0.09); }
+  .ringRotation2 { border-color: rgba(61, 255, 160, 0.06); }
+}
