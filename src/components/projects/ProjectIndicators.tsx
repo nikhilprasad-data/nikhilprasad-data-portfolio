@@ -8,10 +8,10 @@ interface Props {
   projects: Project[];
   activeIndex: number;
   onSelect: (index: number) => void;
-  isPaused: boolean;
+  isTransitioning: boolean;
 }
 
-export default function ProjectIndicators({ projects, activeIndex, onSelect, isPaused }: Props) {
+export default function ProjectIndicators({ projects, activeIndex, onSelect, isTransitioning }: Props) {
   return (
     <div className={styles.indicators} role="tablist" aria-label="Project selector">
       {projects.map((project, i) => (
@@ -22,11 +22,12 @@ export default function ProjectIndicators({ projects, activeIndex, onSelect, isP
           role="tab"
           aria-selected={i === activeIndex}
           aria-label={`Select project: ${project.title}`}
+          disabled={isTransitioning}
         >
           <span className={styles.indicatorNum}>{project.number}</span>
           {i === activeIndex && (
             <span
-              className={`${styles.indicatorProgress} ${isPaused ? styles.paused : ''}`}
+              className={`${styles.indicatorProgress} ${isTransitioning ? styles.paused : ''}`}
               aria-hidden="true"
             />
           )}

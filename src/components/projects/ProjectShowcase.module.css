@@ -1,8 +1,6 @@
-/* src/components/projects/ProjectShowcase.module.css */
-
-/* ── Section ─────────────────────────────────────────────── */
 .section {
   position: relative;
+  isolation: isolate;
   width: 100%;
   min-height: 100svh;
   display: flex;
@@ -11,7 +9,6 @@
   background: var(--bg-primary);
 }
 
-/* ── Section header ─────────────────────────────────────── */
 .sectionHeader {
   position: absolute;
   top: 28px;
@@ -33,63 +30,89 @@
   background: var(--border-subtle);
 }
 
-/* ── 3D Canvas ───────────────────────────────────────────── */
 .canvasWrapper {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.canvasWrapper canvas {
+  pointer-events: none !important;
 }
 
 .sceneLoading {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(61,255,160,0.04) 0%, transparent 70%);
+  background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(61, 255, 160, 0.04) 0%, transparent 70%);
 }
 
-/* Atmospheric center glow */
+.atmosphereTrack {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+}
+
 .atmosphericGlow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 40% 50% at 50% 48%, rgba(61,255,160,0.09) 0%, transparent 65%);
-  pointer-events: none;
+  background: radial-gradient(ellipse 48% 58% at 50% 48%, rgba(61, 255, 160, 0.08) 0%, transparent 68%);
 }
 
-/* ── Overlay layer ───────────────────────────────────────── */
-.overlay {
+.carouselStage {
   position: relative;
-  z-index: 5;
-  flex: 1;
+  z-index: 2;
+  width: min(1400px, calc(100% - 2 * var(--space-xl)));
+  height: min(790px, calc(100svh - 190px));
+  min-height: 580px;
+  margin: 86px auto 108px;
+  overflow: hidden;
+  contain: layout paint;
+}
+
+.projectCard {
+  position: absolute;
+  inset: 0 auto 0 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 0 var(--space-xl) var(--space-xl);
-  max-width: 1400px;
-  width: 100%;
-  margin: 0 auto;
-  pointer-events: none;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(145, 255, 198, 0.15);
+  border-radius: 18px;
+  background: linear-gradient(150deg, rgba(9, 17, 12, 0.48), rgba(6, 9, 8, 0.72));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24), inset 0 1px rgba(220, 255, 235, 0.035);
+  will-change: transform;
 }
 
-/* ── Project Details Panel ───────────────────────────────── */
-.metaPanel {
-  margin-bottom: var(--space-lg);
-  pointer-events: auto;
-  max-width: 560px;
+.visualViewport {
+  position: relative;
+  flex: 0 0 46%;
+  min-height: 250px;
+  max-height: 410px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(145, 255, 198, 0.09);
+}
+
+.cardContent {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  padding: clamp(18px, 2.2vw, 30px);
 }
 
 .details {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.5s var(--ease-out-expo), transform 0.5s var(--ease-out-expo);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.detailsVisible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.detailsFading {
-  opacity: 0;
-  transform: translateY(-8px);
+.projectOverline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .projectNumber {
@@ -97,104 +120,106 @@
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   color: var(--accent-green);
-  margin-bottom: 4px;
 }
 
 .projectCategory {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.15em;
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
   color: var(--text-secondary);
   text-transform: uppercase;
-  margin-bottom: var(--space-sm);
 }
 
 .projectTitle {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-size: clamp(1.45rem, 2.5vw, 2.3rem);
   font-weight: 300;
-  line-height: 0.95;
+  line-height: 1;
   letter-spacing: -0.03em;
   color: var(--text-primary);
-  margin-bottom: var(--space-md);
+  margin: 0 0 12px;
 }
 
 .projectDesc {
   font-family: var(--font-body);
-  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
-  line-height: 1.7;
+  font-size: clamp(0.78rem, 0.92vw, 0.9rem);
+  line-height: 1.6;
   color: var(--text-secondary);
-  margin-bottom: var(--space-md);
-  max-width: 440px;
+  margin: 0 0 16px;
+  max-width: 56ch;
 }
 
-/* Tech badges */
 .techList {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: var(--space-md);
+  margin: auto 0 16px;
 }
 
 .techBadge {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
+  font-size: 0.59rem;
+  letter-spacing: 0.06em;
   color: var(--accent-green);
   border: 1px solid var(--border-green);
-  padding: 3px 10px;
-  transition: all var(--transition-fast);
+  padding: 4px 9px;
 }
 
-.techBadge:hover {
-  background: rgba(61,255,160,0.08);
+.projectLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-/* Project links — rounded pill buttons */
+.projectLink,
 .projectLinkBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  text-decoration: none;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 16px;
   border: 1px solid var(--border-subtle);
-  padding: 6px 14px;
   border-radius: 100px;
-  transition: all var(--transition-base);
+  appearance: none;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-primary);
+  opacity: 1;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  text-decoration: none;
+  text-transform: uppercase;
   white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--transition-base), border-color var(--transition-base), background var(--transition-base);
 }
 
+.projectLink:hover,
 .projectLinkBtn:hover {
   border-color: var(--border-green);
   color: var(--accent-green);
-  background: rgba(61,255,160,0.04);
+  background: rgba(61, 255, 160, 0.05);
 }
 
+.projectLinkLive,
 .projectLinkBtnAccent {
   border-color: var(--border-green);
-  color: var(--accent-green);
+  color: var(--text-primary);
+  background: rgba(61, 255, 160, 0.025);
 }
 
-.projectLinkBtnAccent:hover {
-  background: rgba(61,255,160,0.08);
-  box-shadow: 0 0 12px var(--accent-green-glow);
+.projectLinks .projectLink {
+  text-transform: none;
 }
 
-/* ── Bottom bar ──────────────────────────────────────────── */
-.bottomBar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  pointer-events: auto;
-  flex-wrap: wrap;
-  gap: var(--space-md);
+.projectLink:focus-visible {
+  outline: 2px solid var(--accent-green);
+  outline-offset: 3px;
 }
 
-/* ── Indicators ──────────────────────────────────────────── */
 .indicators {
   display: flex;
   align-items: center;
@@ -210,14 +235,18 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 6px 2px;
-  opacity: 0.4;
+  padding: 8px 3px;
+  opacity: 0.42;
   transition: opacity var(--transition-base);
 }
 
 .indicator:hover,
 .indicatorActive {
-  opacity: 1 !important;
+  opacity: 1;
+}
+
+.indicator:disabled {
+  cursor: default;
 }
 
 .indicatorNum {
@@ -227,7 +256,6 @@
   letter-spacing: 0.12em;
 }
 
-/* Progress bar under active indicator */
 .indicatorProgress {
   position: absolute;
   bottom: 0;
@@ -246,10 +274,43 @@
 
 @keyframes progressFill {
   from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+  to { transform: scaleX(1); }
 }
 
-/* ── Controls ────────────────────────────────────────────── */
+.bottomBar {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: 30px;
+  width: min(1400px, calc(100% - 2 * var(--space-xl)));
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: auto;
+}
+
+.topFade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 112px;
+  z-index: 4;
+  background: linear-gradient(to bottom, var(--bg-primary), transparent);
+  pointer-events: none;
+}
+
+.bottomFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 92px;
+  z-index: 3;
+  background: linear-gradient(to top, var(--bg-primary), transparent);
+  pointer-events: none;
+}
+
 .controls {
   display: flex;
   align-items: center;
@@ -262,7 +323,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   cursor: pointer;
@@ -272,7 +333,7 @@
 .controlBtn:hover {
   border-color: var(--border-green);
   color: var(--accent-green);
-  background: rgba(61,255,160,0.06);
+  background: rgba(61, 255, 160, 0.06);
   box-shadow: 0 0 12px var(--accent-green-glow);
 }
 
@@ -281,51 +342,110 @@
   height: 32px;
 }
 
-/* ── Fades ───────────────────────────────────────────────── */
-.topFade {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  z-index: 4;
-  background: linear-gradient(to bottom, var(--bg-primary), transparent);
-  pointer-events: none;
-}
-
-.bottomFade {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  z-index: 3;
-  background: linear-gradient(to top, var(--bg-primary), transparent);
-  pointer-events: none;
-}
-
-/* ── Responsive ──────────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .overlay {
-    padding: 0 var(--space-md) var(--space-lg);
+@media (max-width: 1279px) {
+  .carouselStage {
+    width: calc(100% - 2 * var(--space-lg));
+    height: 680px;
+    min-height: 0;
+    margin-top: 84px;
+    margin-bottom: 108px;
   }
 
-  .sectionHeader {
-    padding: 0 var(--space-md);
+  .projectCard {
+    border-radius: 16px;
   }
-}
 
-@media (max-width: 768px) {
+  .visualViewport {
+    flex-basis: 43%;
+    min-height: 250px;
+    max-height: 330px;
+  }
+
   .projectTitle {
-    font-size: clamp(1.5rem, 7vw, 2rem);
+    font-size: clamp(1.65rem, 4vw, 2.6rem);
+  }
+
+  .projectDesc {
+    font-size: 0.9rem;
   }
 
   .bottomBar {
-    flex-direction: column;
-    align-items: flex-start;
+    width: calc(100% - 2 * var(--space-lg));
+    bottom: 28px;
+  }
+}
+
+@media (max-width: 767px) {
+  .sectionHeader {
+    top: 22px;
+    padding: 0 var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .carouselStage {
+    width: calc(100% - 2 * var(--space-md));
+    height: 700px;
+    margin-top: 76px;
+    margin-bottom: 100px;
+  }
+
+  .projectCard {
+    border-radius: 14px;
+  }
+
+  .visualViewport {
+    flex-basis: 38%;
+    min-height: 230px;
+    max-height: 285px;
+  }
+
+  .cardContent {
+    padding: 18px 16px 20px;
+  }
+
+  .projectOverline {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .projectCategory {
+    font-size: 0.54rem;
+    letter-spacing: 0.08em;
+  }
+
+  .projectTitle {
+    font-size: clamp(1.55rem, 7vw, 2.15rem);
+  }
+
+  .projectDesc {
+    font-size: 0.81rem;
+    line-height: 1.52;
   }
 
   .techList {
-    gap: 4px;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+
+  .techBadge {
+    font-size: 0.55rem;
+    padding: 4px 7px;
+  }
+
+  .bottomBar {
+    justify-content: center;
+    width: calc(100% - 2 * var(--space-md));
+    bottom: 25px;
+  }
+
+  .indicators {
+    gap: var(--space-sm);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .projectLink,
+  .indicator {
+    transition-duration: 0.01ms;
   }
 }

@@ -1,103 +1,42 @@
-// src/lib/hooks/useProjectAutoplay.ts
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 const AUTOPLAY_INTERVAL = 5000;
 
 interface UseProjectAutoplayReturn {
   activeIndex: number;
-  isPaused: boolean;
-  goTo: (index: number) => void;
-  goNext: () => void;
-  goPrev: () => void;
-  pause: () => void;
-  resume: () => void;
-  togglePause: () => void;
+  setActiveIndex: (index: number) => void;
+  resetAutoplay: () => void;
 }
 
-export function useProjectAutoplay(total: number): UseProjectAutoplayReturn {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+export function useProjectAutoplay(
+  total: number,
+  isTransitioning: boolean,
+  onAdvance: () => void
+): UseProjectAutoplayReturn {
+  const [activeIndex, updateActiveIndex] = useState(0);
+  const [timerVersion, setTimerVersion] = useState(0);
+  const onAdvanceRef = useRef(onAdvance);
 
-  // Single source of truth for the timer
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const isPausedRef = useRef(false);
+  useLayoutEffect(() => {
+    onAdvanceRef.current = onAdvance;
+  }, [onAdvance]);
 
-  const clearTimer = useCallback(() => {
-    if (intervalRef.current !== null) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
+  const setActiveIndex = useCallback((index: number) => {
+    updateActiveIndex(((index % total) + total) % total);
+  }, [total]);
+
+  const resetAutoplay = useCallback(() => {
+    setTimerVersion((version) => version + 1);
   }, []);
 
-  const startTimer = useCallback(() => {
-    clearTimer();
-    if (isPausedRef.current) return;
-
-    intervalRef.current = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % total);
-    }, AUTOPLAY_INTERVAL);
-  }, [clearTimer, total]);
-
-  // Start on mount
   useEffect(() => {
-    startTimer();
-    return () => clearTimer();
-  }, [startTimer, clearTimer]);
+    if (isTransitioning || total < 2) return;
 
-  const goTo = useCallback(
-    (index: number) => {
-      setActiveIndex(index);
-      startTimer(); // reset timer on manual navigation
-    },
-    [startTimer]
-  );
+    const timeout = window.setTimeout(() => onAdvanceRef.current(), AUTOPLAY_INTERVAL);
+    return () => window.clearTimeout(timeout);
+  }, [isTransitioning, timerVersion, total]);
 
-  const goNext = useCallback(() => {
-    setActiveIndex((prev) => {
-      const next = (prev + 1) % total;
-      return next;
-    });
-    startTimer();
-  }, [startTimer, total]);
-
-  const goPrev = useCallback(() => {
-    setActiveIndex((prev) => {
-      const next = (prev - 1 + total) % total;
-      return next;
-    });
-    startTimer();
-  }, [startTimer, total]);
-
-  const pause = useCallback(() => {
-    isPausedRef.current = true;
-    setIsPaused(true);
-    clearTimer();
-  }, [clearTimer]);
-
-  const resume = useCallback(() => {
-    isPausedRef.current = false;
-    setIsPaused(false);
-    startTimer();
-  }, [startTimer]);
-
-  const togglePause = useCallback(() => {
-    if (isPausedRef.current) {
-      resume();
-    } else {
-      pause();
-    }
-  }, [pause, resume]);
-
-  return {
-    activeIndex,
-    isPaused,
-    goTo,
-    goNext,
-    goPrev,
-    pause,
-    resume,
-    togglePause,
-  };
+  return { activeIndex, setActiveIndex, resetAutoplay };
 }

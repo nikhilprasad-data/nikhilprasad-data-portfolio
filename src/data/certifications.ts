@@ -8,6 +8,9 @@ export interface Certification {
   credentialId?: string;
   url?: string;
   logo?: string;
+  image?: string | null;
+  points?: string[];
+  learned?: string[];
 }
 
 export const CERTIFICATIONS: Certification[] = [

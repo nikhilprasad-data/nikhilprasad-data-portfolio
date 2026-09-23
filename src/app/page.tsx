@@ -6,7 +6,6 @@ import ProjectShowcase from '@/components/projects/ProjectShowcase';
 import SkillsSection from '@/components/skills/SkillsSection';
 import EducationSection from '@/components/education/EducationSection';
 import CertificationsSection from '@/components/certifications/CertificationsSection';
-import GitHubSection from '@/components/github/GitHubSection';
 import ContactSection from '@/components/contact/ContactSection';
 import Footer from '@/components/footer/Footer';
 
@@ -20,7 +19,6 @@ export default function HomePage() {
       <SkillsSection />
       <EducationSection />
       <CertificationsSection />
-      <GitHubSection />
       <ContactSection />
       <Footer />
     </main>
