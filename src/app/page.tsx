@@ -7,7 +7,6 @@ import SkillsSection from '@/components/skills/SkillsSection';
 import EducationSection from '@/components/education/EducationSection';
 import CertificationsSection from '@/components/certifications/CertificationsSection';
 import ContactSection from '@/components/contact/ContactSection';
-import Footer from '@/components/footer/Footer';
 
 export default function HomePage() {
   return (
@@ -20,7 +19,6 @@ export default function HomePage() {
       <EducationSection />
       <CertificationsSection />
       <ContactSection />
-      <Footer />
     </main>
   );
 }

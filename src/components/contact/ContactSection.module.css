@@ -1,237 +1,381 @@
-/* src/components/contact/ContactSection.module.css */
-
 .section {
   position: relative;
-  width: 100%;
-  min-height: 100svh;
+  isolation: isolate;
   display: flex;
   align-items: center;
+  width: 100%;
+  min-height: 100svh;
   overflow: hidden;
-  background: var(--bg-primary);
+  background:
+    radial-gradient(ellipse 68% 50% at 50% 72%, rgba(20, 78, 49, 0.11), transparent 72%),
+    var(--bg-primary);
 }
 
 .inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--space-2xl) var(--space-xl);
-  width: 100%;
   position: relative;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xl);
+  z-index: 1;
+  width: min(100%, 1400px);
+  margin: 0 auto;
+  padding: 112px var(--space-xl) 88px;
 }
 
-/* Headline reveal animation */
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 .headline {
   display: flex;
   flex-direction: column;
-  gap: 0;
-  font-family: var(--font-display);
-  font-size: clamp(3.5rem, 8vw, 9rem);
-  font-weight: 200;
-  line-height: 0.88;
-  letter-spacing: -0.045em;
-  color: var(--text-primary);
+  margin-top: 30px;
   overflow: hidden;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 8.5vw, 7.5rem);
+  font-weight: 300;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
 }
 
-.headlineWord {
+.headline > span {
   display: block;
   opacity: 0;
-  transform: translateY(60px);
-  transition: opacity 0.9s var(--ease-out-expo), transform 0.9s var(--ease-out-expo);
+  transform: translateY(32px);
+  transition:
+    opacity 760ms var(--ease-out-expo),
+    transform 760ms var(--ease-out-expo);
 }
 
-.headlineWord:nth-child(2) {
-  transition-delay: 120ms;
+.headline > span:nth-child(2) {
+  transition-delay: 90ms;
 }
 
-.headlineVisible .headlineWord {
+.headlineVisible > span {
   opacity: 1;
   transform: translateY(0);
 }
 
 .accent {
   color: var(--accent-green);
-  font-style: italic;
+  font-style: normal;
 }
 
-.tagline {
+.availability {
+  margin-top: 28px;
+  color: var(--text-primary);
   font-family: var(--font-body);
-  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
-  color: var(--text-secondary);
-  max-width: 480px;
-  line-height: 1.65;
+  font-size: clamp(1rem, 1.55vw, 1.16rem);
+  line-height: 1.6;
 }
 
-/* Links grid */
+.location {
+  margin-top: 8px;
+  color: #a0a7a2;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
 .linksGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: var(--space-xl);
-  margin-top: var(--space-md);
-  max-width: 900px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: min(100%, 960px);
+  margin: clamp(36px, 5vh, 52px) auto 0;
 }
 
-.linkItem {
+.contactCard {
   position: relative;
   display: flex;
+  min-width: 0;
+  min-height: 172px;
   flex-direction: column;
-  gap: 6px;
-  padding: var(--space-lg) var(--space-md);
-  text-decoration: none;
-  border-right: 1px solid var(--border-subtle);
-  transition: background var(--transition-base);
+  padding: 24px 26px 20px;
   overflow: hidden;
+  border: 1px solid var(--border-medium);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(20, 24, 22, 0.88), rgba(12, 14, 13, 0.88));
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 260ms var(--ease-out-expo),
+    border-color 260ms ease,
+    background-color 260ms ease,
+    box-shadow 260ms ease;
 }
 
-.linkItem:last-child {
-  border-right: none;
+.contactCard::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 90% 100% at 0% 0%, rgba(61, 255, 160, 0.07), transparent 66%);
+  content: '';
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity 260ms ease;
 }
 
-.linkItem:hover {
-  background: rgba(61, 255, 160, 0.03);
+.contactCard::after {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--accent-mint);
+  box-shadow: 0 0 12px rgba(130, 255, 204, 0.75);
+  content: '';
+  opacity: 0.32;
+  transition: opacity 260ms ease, transform 260ms ease;
 }
 
-.linkLabel {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
+.contactCard:hover {
+  z-index: 1;
+  transform: translateY(-4px) scale(1.008);
+  border-color: rgba(61, 255, 160, 0.3);
+  background-color: rgba(17, 22, 19, 0.96);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.24),
+    0 0 26px rgba(61, 255, 160, 0.075);
 }
 
-.linkValueRow {
+.contactCard:hover::before {
+  opacity: 1;
+}
+
+.contactCard:hover::after {
+  opacity: 0.8;
+  transform: scale(1.4);
+}
+
+.contactCard:focus-visible {
+  outline: 2px solid var(--accent-green);
+  outline-offset: 4px;
+  border-color: var(--border-green);
+}
+
+.cardTop,
+.cardAction {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
   justify-content: space-between;
 }
 
-.linkValue {
-  font-family: var(--font-body);
-  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
-  color: var(--text-primary);
-  transition: color var(--transition-base);
-  word-break: break-all;
+.cardLabel {
+  color: #a0aaa4;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
 }
 
-.linkItem:hover .linkValue {
-  color: var(--accent-green);
+.cardIcon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 1px solid rgba(61, 255, 160, 0.15);
+  border-radius: 11px;
+  background: rgba(61, 255, 160, 0.055);
+  color: var(--accent-mint);
+  transition: transform 260ms var(--ease-out-expo), background 260ms ease;
 }
 
-.linkIcon {
-  font-size: 0.9rem;
-  color: var(--text-tertiary);
-  transition: color var(--transition-base), transform var(--transition-base);
-  flex-shrink: 0;
+.cardIcon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
 }
 
-.linkItem:hover .linkIcon {
-  color: var(--accent-green);
-  transform: translate(1px, -1px);
+.contactCard:hover .cardIcon {
+  transform: scale(1.06);
+  background: rgba(61, 255, 160, 0.1);
 }
 
-/* Underline reveal */
-.linkUnderline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--accent-green);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--transition-base);
+.contactCard:first-child .cardIcon svg,
+.contactCard:last-child .cardIcon svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
 }
 
-.linkItem:hover .linkUnderline {
-  transform: scaleX(1);
-}
-
-/* Decorative large text */
-.decoText {
-  position: absolute;
-  bottom: -6%;
-  right: -2%;
-  font-family: var(--font-display);
-  font-size: clamp(6rem, 18vw, 22rem);
-  font-weight: 200;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(61, 255, 160, 0.05);
-  letter-spacing: -0.06em;
-  line-height: 1;
-  pointer-events: none;
-  z-index: 2;
-  user-select: none;
-}
-
-/* Glow */
-.glow {
-  position: absolute;
-  top: 20%;
-  right: 10%;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(61, 255, 160, 0.07) 0%, transparent 65%);
-  pointer-events: none;
+.cardValue {
+  position: relative;
   z-index: 1;
+  display: block;
+  margin: auto 0 18px;
+  padding-top: 22px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  transition: color 220ms ease;
 }
 
-/* Grid overlay */
-.gridOverlay {
+.contactCard:hover .cardValue {
+  color: #f5fff9;
+}
+
+.cardAction {
+  justify-content: flex-start;
+  gap: 7px;
+  color: var(--accent-mint);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.actionArrow {
+  width: 15px;
+  height: 15px;
+  transition: transform 220ms var(--ease-out-expo);
+}
+
+.contactCard:hover .actionArrow {
+  transform: translate(2px, -2px);
+}
+
+.atmosphere {
   position: absolute;
+  z-index: 0;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-  background-size: 80px 80px;
+  overflow: hidden;
   pointer-events: none;
-  z-index: 3;
-  opacity: 0.5;
+  background:
+    radial-gradient(ellipse 58% 35% at 50% 69%, rgba(31, 105, 65, 0.14), transparent 72%),
+    radial-gradient(ellipse 32% 28% at 14% 27%, rgba(61, 255, 160, 0.045), transparent 75%),
+    radial-gradient(ellipse 30% 30% at 87% 78%, rgba(61, 255, 160, 0.04), transparent 74%);
+  perspective: 800px;
 }
 
-/* Responsive */
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(130, 255, 204, 0.72);
+  box-shadow: 0 0 10px 2px rgba(61, 255, 160, 0.3);
+  opacity: 0.45;
+  animation: particle-flow 12s ease-in-out infinite alternate;
+}
+
+.particleOne { top: 25%; left: 13%; --drift-x: 12px; --drift-y: 32px; animation-delay: -2s; }
+.particleTwo { top: 36%; left: 83%; --drift-x: -18px; --drift-y: 22px; animation-delay: -6s; }
+.particleThree { top: 72%; left: 9%; --drift-x: 25px; --drift-y: -18px; animation-delay: -4s; }
+.particleFour { top: 80%; left: 91%; --drift-x: -22px; --drift-y: -24px; animation-delay: -8s; }
+.particleFive { top: 17%; left: 67%; --drift-x: -14px; --drift-y: 26px; animation-delay: -9s; }
+.particleSix { top: 59%; left: 95%; --drift-x: -20px; --drift-y: -16px; animation-delay: -3s; }
+.particleSeven { top: 88%; left: 37%; --drift-x: 16px; --drift-y: -26px; animation-delay: -10s; }
+.particleEight { top: 47%; left: 5%; --drift-x: 20px; --drift-y: 12px; animation-delay: -5s; }
+
+@keyframes particle-flow {
+  0% {
+    opacity: 0.16;
+    transform: translate3d(0, 0, 0) scale(0.75);
+  }
+
+  50% {
+    opacity: 0.52;
+  }
+
+  100% {
+    opacity: 0.25;
+    transform: translate3d(var(--drift-x), var(--drift-y), 0) scale(1);
+  }
+}
+
 @media (max-width: 900px) {
-  .linksGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .linkItem:nth-child(2) {
-    border-right: none;
-  }
-
-  .linkItem:nth-child(3) {
-    border-right: 1px solid var(--border-subtle);
-  }
-}
-
-@media (max-width: 768px) {
   .inner {
-    padding: var(--space-xl) var(--space-md);
+    padding-inline: var(--space-lg);
   }
 
-  .linksGrid {
-    grid-template-columns: 1fr 1fr;
-    max-width: 100%;
-  }
-
-  .decoText {
-    font-size: clamp(4rem, 24vw, 10rem);
+  .contactCard {
+    min-height: 164px;
+    padding-inline: 22px;
   }
 }
 
-@media (max-width: 480px) {
-  .linksGrid {
-    grid-template-columns: 1fr;
+@media (max-width: 680px) {
+  .section {
+    min-height: auto;
   }
 
-  .linkItem {
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
+  .inner {
+    padding: 104px var(--space-md) 72px;
+  }
+
+  .headline {
+    margin-top: 26px;
+    font-size: clamp(3.25rem, 15vw, 5.25rem);
+  }
+
+  .availability {
+    max-width: 28rem;
+    margin-top: 24px;
+    font-size: 1rem;
+  }
+
+  .location {
+    max-width: 20rem;
+    font-size: 0.84rem;
+  }
+
+  .linksGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .contactCard {
+    min-height: 152px;
+    padding: 20px 21px 18px;
+    border-radius: 16px;
+  }
+
+  .cardValue {
+    max-width: 100%;
+    font-size: 1.05rem;
+  }
+
+  .atmosphere {
+    background:
+      radial-gradient(ellipse 92% 28% at 50% 35%, rgba(31, 105, 65, 0.12), transparent 74%),
+      radial-gradient(ellipse 80% 24% at 50% 80%, rgba(61, 255, 160, 0.035), transparent 75%);
+  }
+
+  .particle {
+    opacity: 0.27;
+    animation-duration: 20s;
+  }
+}
+
+@media (hover: none) {
+  .contactCard:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headline > span,
+  .contactCard,
+  .contactCard::before,
+  .contactCard::after,
+  .cardIcon,
+  .actionArrow,
+  .particle {
+    animation: none;
+    transition-duration: 0.01ms;
+  }
+
+  .particle {
+    opacity: 0.22;
   }
 }

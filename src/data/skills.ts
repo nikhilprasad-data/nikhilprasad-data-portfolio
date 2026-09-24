@@ -1,31 +1,61 @@
-// src/data/skills.ts
-
-export interface Skill {
+export interface Technology {
   name: string;
-  category: 'lang' | 'framework' | 'infra' | 'tool' | 'ai';
-  level: number; // 1–3 (ring assignment)
+  logo?: string;
 }
 
-export const SKILLS: Skill[] = [
-  // Core — ring 1 (inner)
-  { name: 'Python', category: 'lang', level: 1 },
-  { name: 'FastAPI', category: 'framework', level: 1 },
-  { name: 'LangChain', category: 'ai', level: 1 },
-  { name: 'PostgreSQL', category: 'infra', level: 1 },
+export interface SkillCategory {
+  number: string;
+  title: string;
+  technologies: Technology[];
+}
 
-  // Mid — ring 2
-  { name: 'LangGraph', category: 'ai', level: 2 },
-  { name: 'Redis', category: 'infra', level: 2 },
-  { name: 'Docker', category: 'infra', level: 2 },
-  { name: 'Git', category: 'tool', level: 2 },
-  { name: 'SQL', category: 'lang', level: 2 },
-  { name: 'pgvector', category: 'infra', level: 2 },
-
-  // Outer — ring 3
-  { name: 'GitHub Actions', category: 'tool', level: 3 },
-  { name: 'TypeScript', category: 'lang', level: 3 },
-  { name: 'React', category: 'framework', level: 3 },
-  { name: 'Next.js', category: 'framework', level: 3 },
-  { name: 'Linux', category: 'infra', level: 3 },
-  { name: 'REST APIs', category: 'framework', level: 3 },
+export const SKILL_CATEGORIES: SkillCategory[] = [
+  {
+    number: '01',
+    title: 'CORE PROGRAMMING',
+    technologies: [
+      { name: 'Python', logo: '/tech-logos/python.svg' },
+      { name: 'C', logo: '/tech-logos/c.svg' },
+      { name: 'SQL' },
+    ],
+  },
+  {
+    number: '02',
+    title: 'AI & LLM',
+    technologies: [
+      { name: 'LangChain', logo: '/tech-logos/langchain.svg' },
+      { name: 'LangGraph', logo: '/tech-logos/langgraph.svg' },
+      { name: 'Gemini', logo: '/tech-logos/gemini.svg' },
+      { name: 'Claude', logo: '/tech-logos/claude.svg' },
+      { name: 'OpenAI', logo: '/tech-logos/openai.svg' },
+    ],
+  },
+  {
+    number: '03',
+    title: 'FRAMEWORKS & BACKEND',
+    technologies: [
+      { name: 'FastAPI', logo: '/tech-logos/fastapi.svg' },
+      { name: 'Flask', logo: '/tech-logos/flask.svg' },
+      { name: 'SQLAlchemy', logo: '/tech-logos/sqlalchemy.svg' },
+    ],
+  },
+  {
+    number: '04',
+    title: 'DATABASE, CLOUD & DEVELOPER TOOLS',
+    technologies: [
+      { name: 'PostgreSQL', logo: '/tech-logos/postgresql.svg' },
+      { name: 'Redis', logo: '/tech-logos/redis.svg' },
+      { name: 'Docker', logo: '/tech-logos/docker.svg' },
+      { name: 'Render', logo: '/tech-logos/render.svg' },
+      { name: 'Vercel', logo: '/tech-logos/vercel.svg' },
+      { name: 'Neon', logo: '/tech-logos/neon.svg' },
+      { name: 'Upstash', logo: '/tech-logos/upstash.svg' },
+      { name: 'Git', logo: '/tech-logos/git.svg' },
+      { name: 'GitHub', logo: '/tech-logos/github.svg' },
+      { name: 'Cursor', logo: '/tech-logos/cursor.svg' },
+      { name: 'Codex' },
+      { name: 'Antigravity', logo: '/tech-logos/antigravity.png' },
+      { name: 'VS Code', logo: '/tech-logos/vscode.svg' },
+    ],
+  },
 ];

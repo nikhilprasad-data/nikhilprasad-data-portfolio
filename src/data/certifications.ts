@@ -1,49 +1,35 @@
-// src/data/certifications.ts
-
 export interface Certification {
   id: string;
+  organization: string;
   title: string;
-  issuer: string;
-  date: string;
-  credentialId?: string;
-  url?: string;
-  logo?: string;
-  image?: string | null;
-  points?: string[];
-  learned?: string[];
+  date?: string;
+  credential?: string;
+  image: string;
+  learned: string[];
 }
 
 export const CERTIFICATIONS: Certification[] = [
   {
-    id: 'cert-01',
-    title: 'Certification Title Placeholder',
-    issuer: 'Issuing Organization',
-    date: '2025',
-    credentialId: 'CREDENTIAL-ID-PLACEHOLDER',
-    url: '#',
+    id: 'bcgx',
+    organization: 'BCGX',
+    title: 'GenAI Job Simulation',
+    date: 'September 24, 2026',
+    credential: 'User verification code: 6aa73dfc2e1d09f9fd1cd',
+    image: '/certificates/BCGX-Certificate.png',
+    learned: [
+      'Data extraction and initial analysis',
+      'Developing an AI-powered financial chatbot',
+    ],
   },
   {
-    id: 'cert-02',
-    title: 'Certification Title Placeholder',
-    issuer: 'Issuing Organization',
-    date: '2024',
-    credentialId: 'CREDENTIAL-ID-PLACEHOLDER',
-    url: '#',
-  },
-  {
-    id: 'cert-03',
-    title: 'Certification Title Placeholder',
-    issuer: 'Issuing Organization',
-    date: '2024',
-    credentialId: 'CREDENTIAL-ID-PLACEHOLDER',
-    url: '#',
-  },
-  {
-    id: 'cert-04',
-    title: 'Certification Title Placeholder',
-    issuer: 'Issuing Organization',
-    date: '2024',
-    credentialId: 'CREDENTIAL-ID-PLACEHOLDER',
-    url: '#',
+    id: 'deloitte-technology-simulation',
+    organization: 'DELOITTE / FORAGE',
+    title: 'Deloitte Australia Technology Job Simulation',
+    date: 'September 17, 2026',
+    credential: 'User verification code: 6aa73dfc2e1d09f9fd1cd',
+    image: '/certificates/Deloitte-Certificate.png',
+    learned: [
+      'Completed practical coding and development tasks',
+    ],
   },
 ];
