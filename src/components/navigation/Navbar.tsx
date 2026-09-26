@@ -15,11 +15,43 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState<string | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let isScrolled = false;
+
+    const onScroll = () => {
+      const nextScrolled = window.scrollY > 40;
+      if (nextScrolled === isScrolled) return;
+      isScrolled = nextScrolled;
+      setScrolled(nextScrolled);
+    };
+
+    const initialFrame = window.requestAnimationFrame(onScroll);
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.cancelAnimationFrame(initialFrame);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const sections = NAV_LINKS
+      .map(({ href }) => document.getElementById(href.slice(1)))
+      .filter((section): section is HTMLElement => section !== null);
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      const current = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+
+      if (current) setActiveHref(`#${current.target.id}`);
+    }, { rootMargin: '-30% 0px -55% 0px', threshold: 0 });
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -28,7 +60,12 @@ export default function Navbar() {
         {/* Desktop Nav */}
         <nav className={styles.nav} aria-label="Main navigation">
           {NAV_LINKS.map((link) => (
-            <a key={link.label} href={link.href} className={styles.navLink}>
+            <a
+              key={link.label}
+              href={link.href}
+              className={`${styles.navLink} ${activeHref === link.href ? styles.navLinkActive : ''}`}
+              aria-current={activeHref === link.href ? 'location' : undefined}
+            >
               {link.label}
             </a>
           ))}
@@ -58,7 +95,8 @@ export default function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className={styles.mobileLink}
+                className={`${styles.mobileLink} ${activeHref === link.href ? styles.mobileLinkActive : ''}`}
+                aria-current={activeHref === link.href ? 'location' : undefined}
                 onClick={() => setMenuOpen(false)}
               >
                 {link.label}

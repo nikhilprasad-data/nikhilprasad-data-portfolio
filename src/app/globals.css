@@ -6,6 +6,7 @@
 
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
+  --navbar-height: 69px;
   /* Background */
   --bg-primary:   #080808;
   --bg-secondary: #0e0e0e;
@@ -18,12 +19,25 @@
   --accent-green-glow:  rgba(61, 255, 160, 0.12);
   --accent-green-glow2: rgba(61, 255, 160, 0.25);
   --accent-green-glow3: rgba(61, 255, 160, 0.06);
+  --ambient-green-soft: rgba(61, 255, 160, 0.028);
+  --ambient-green-medium: rgba(61, 255, 160, 0.055);
+  --ambient-mint-soft: rgba(130, 255, 204, 0.035);
+
+  /* Shared glass surfaces */
+  --glass-surface: rgba(14, 18, 16, 0.76);
+  --glass-surface-strong: rgba(12, 15, 13, 0.88);
+  --glass-border: rgba(184, 225, 201, 0.14);
+  --glass-highlight: rgba(220, 255, 234, 0.05);
+  --glass-blur: 16px;
+  --glass-radius: 18px;
+  --glass-shadow: 0 20px 50px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(220, 255, 234, 0.045);
+  --glass-shadow-hover: 0 24px 56px rgba(0, 0, 0, 0.34), 0 0 24px rgba(61, 255, 160, 0.055), inset 0 1px 0 rgba(220, 255, 234, 0.06);
 
   /* Text */
   --text-primary:   #f0f0f0;
-  --text-secondary: #707070;
-  --text-tertiary:  #404040;
-  --text-muted:     #2a2a2a;
+  --text-secondary: #a0a7a2;
+  --text-tertiary:  #737b75;
+  --text-muted:     #555d57;
 
   /* Borders */
   --border-subtle:   rgba(255, 255, 255, 0.05);
@@ -50,9 +64,11 @@
 
   /* Transitions */
   --transition-fast:   150ms var(--ease-out-expo);
-  --transition-base:   300ms var(--ease-out-expo);
+  --transition-base:   360ms var(--ease-out-expo);
   --transition-slow:   600ms var(--ease-out-expo);
   --transition-xslow:  1000ms var(--ease-out-expo);
+  --transition-card:   380ms var(--ease-out-expo);
+  --transition-reveal: 760ms var(--ease-out-expo);
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */
@@ -65,6 +81,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  scroll-padding-block-start: var(--navbar-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -73,10 +90,42 @@ html {
 body {
   font-family: var(--font-body);
   background-color: var(--bg-primary);
+  background-image: none;
   color: var(--text-primary);
   min-height: 100dvh;
   overflow-x: hidden;
   position: relative;
+}
+
+.page-environment {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+}
+
+.page-environment > section {
+  position: relative;
+  z-index: 1;
+}
+
+.page-atmosphere {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 78% 72% at 76% 16%, rgba(61, 255, 160, 0.075), transparent 74%),
+    radial-gradient(ellipse 70% 82% at 17% 59%, rgba(130, 255, 204, 0.038), transparent 76%),
+    radial-gradient(ellipse 74% 58% at 79% 92%, rgba(61, 255, 160, 0.052), transparent 78%),
+    linear-gradient(180deg, #080a09 0%, #080908 52%, #080a09 100%);
+}
+
+.page-atmosphere::after {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 90% at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.3) 100%);
+  content: '';
 }
 
 /* ── Typography Utilities ──────────────────────────────────── */
@@ -180,7 +229,12 @@ body {
   border: none;
   background: none;
   text-decoration: none;
-  transition: all var(--transition-base);
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
   padding: 14px 28px;
   position: relative;
   white-space: nowrap;
@@ -216,7 +270,7 @@ body {
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
   background-size: 200px 200px;
-  opacity: 0.028;
+  opacity: 0.02;
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: overlay;
@@ -271,6 +325,10 @@ body {
 
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
+  :root {
+    --navbar-height: calc(69px + env(safe-area-inset-top, 0px));
+  }
+
   .section-inner {
     padding: 0 var(--space-md);
   }

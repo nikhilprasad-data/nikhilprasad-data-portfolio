@@ -18,7 +18,6 @@ export default function EducationSection() {
 
       <div className={styles.inner}>
         <header className={styles.sectionHeader}>
-          <span className="eyebrow">— 06 / EDUCATION</span>
           <h2 id="education-heading" className={styles.heading}>
             <span>Academic foundation.</span>
             <span className={styles.headingAccent}>Engineering trajectory.</span>

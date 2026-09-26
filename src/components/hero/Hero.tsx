@@ -3,6 +3,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useRef } from 'react';
+import { useReducedMotion } from '@/lib/hooks/useReducedMotion';
 import styles from './Hero.module.css';
 
 // Lazy-load the 3D canvas so it doesn't block SSR
@@ -13,20 +14,37 @@ const HeroScene = dynamic(() => import('./HeroScene'), {
 
 export default function Hero() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    // GSAP scroll-parallax on headline
     const el = headlineRef.current;
     if (!el) return;
 
+    if (reducedMotion) {
+      el.style.removeProperty('transform');
+      el.style.removeProperty('opacity');
+      return;
+    }
+
+    let frame = 0;
     const onScroll = () => {
-      const scrollY = window.scrollY;
-      el.style.transform = `translateY(${scrollY * 0.18}px)`;
-      el.style.opacity = `${Math.max(0, 1 - scrollY / 500)}`;
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const scrollY = window.scrollY;
+        el.style.transform = `translateY(${scrollY * 0.08}px)`;
+        el.style.opacity = `${Math.max(0, 1 - scrollY / 760)}`;
+      });
     };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    onScroll();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, [reducedMotion]);
 
   return (
     <section
@@ -67,7 +85,7 @@ export default function Hero() {
               <path d="M3 11L11 3M11 3H5M11 3v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </a>
-          <a href="/resume-placeholder.pdf" className={`btn btn-ghost ${styles.ctaGhost}`} target="_blank" rel="noopener noreferrer">
+          <a href="/resume.pdf" className={`btn btn-ghost ${styles.ctaGhost}`} target="_blank" rel="noopener noreferrer">
             Download Résumé
           </a>
         </div>

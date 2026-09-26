@@ -1,5 +1,3 @@
-'use client';
-
 import type { Project } from '@/data/projects';
 import styles from './ProjectShowcase.module.css';
 
@@ -30,18 +28,17 @@ export default function ProjectDetails({ project }: Props) {
   return (
     <div className={styles.details}>
       <div className={styles.projectOverline}>
-        <span className={styles.projectNumber}>{project.number}</span>
         <span className={styles.projectCategory}>{project.category}</span>
       </div>
 
-      <h2 className={styles.projectTitle}>{project.title}</h2>
+      <h3 className={styles.projectTitle}>{project.title}</h3>
       <p className={styles.projectDesc}>{project.description}</p>
 
-      <div className={styles.techList} aria-label="Technologies used">
+      <ul className={styles.techList} aria-label="Technologies used">
         {project.technologies.map((tech) => (
-          <span key={tech} className={styles.techBadge}>{tech}</span>
+          <li key={tech} className={styles.techBadge}>{tech}</li>
         ))}
-      </div>
+      </ul>
 
       <div className={styles.projectLinks}>
         <a

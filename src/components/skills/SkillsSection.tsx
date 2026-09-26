@@ -54,7 +54,6 @@ export default function SkillsSection() {
 
       <div className={styles.inner}>
         <header className={styles.sectionHeader}>
-          <span className={styles.eyebrow}>05 / TECH STACK</span>
           <h2 id="skills-title" className={styles.sectionTitle}>
             Technologies I work with
           </h2>

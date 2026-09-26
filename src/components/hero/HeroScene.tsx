@@ -1,7 +1,7 @@
 // src/components/hero/HeroScene.tsx
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Sphere, MeshDistortMaterial, Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
@@ -14,10 +14,16 @@ function ParticleField({ count = 600 }: { count?: number }) {
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
+    let seed = 2026;
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+
     for (let i = 0; i < count; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 20;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 14;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 8;
+      arr[i * 3]     = (random() - 0.5) * 20;
+      arr[i * 3 + 1] = (random() - 0.5) * 14;
+      arr[i * 3 + 2] = (random() - 0.5) * 8;
     }
     return arr;
   }, [count]);
@@ -36,7 +42,7 @@ function ParticleField({ count = 600 }: { count?: number }) {
         size={0.018}
         sizeAttenuation
         depthWrite={false}
-        opacity={0.45}
+        opacity={0.38}
       />
     </Points>
   );
@@ -60,7 +66,7 @@ function CentralOrb() {
           distort={reduced ? 0 : 0.28}
           speed={reduced ? 0 : 1.5}
           emissive="#3dffa0"
-          emissiveIntensity={0.08}
+        emissiveIntensity={0.15}
           transparent
           opacity={0.85}
         />
@@ -86,17 +92,24 @@ function OrbitalRing({
   const ref = useRef<THREE.Mesh>(null);
   const reduced = useReducedMotion();
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     if (reduced || !ref.current) return;
-    if (axis === 'x') ref.current.rotation.x += delta * speed;
-    if (axis === 'y') ref.current.rotation.y += delta * speed;
-    if (axis === 'z') ref.current.rotation.z += delta * speed;
+    const phase = axis === 'x' ? 2.1 : axis === 'z' ? 4.2 : 0;
+    const pace = 1 + Math.sin(state.clock.elapsedTime * 0.22 + phase) * 0.035;
+    if (axis === 'x') ref.current.rotation.x += delta * speed * pace;
+    if (axis === 'y') ref.current.rotation.y += delta * speed * pace;
+    if (axis === 'z') ref.current.rotation.z += delta * speed * pace;
   });
 
   return (
     <mesh ref={ref} position={[3.2, 0.4, -2]}>
       <torusGeometry args={[radius, thickness, 3, 120]} />
-      <meshBasicMaterial color={color} transparent opacity={0.12} />
+      <meshBasicMaterial
+        color={color}
+        transparent
+        opacity={radius < 2.2 ? 0.17 : radius < 3 ? 0.115 : 0.075}
+        depthWrite={false}
+      />
     </mesh>
   );
 }
@@ -109,7 +122,7 @@ function TechGridPlane() {
   useFrame((state) => {
     if (reduced || !ref.current) return;
     const mat = ref.current.material as THREE.MeshBasicMaterial;
-    mat.opacity = 0.04 + Math.sin(state.clock.elapsedTime * 0.3) * 0.015;
+    mat.opacity = 0.027 + Math.sin(state.clock.elapsedTime * 0.3) * 0.008;
   });
 
   return (
@@ -119,7 +132,7 @@ function TechGridPlane() {
         color="#3dffa0"
         wireframe
         transparent
-        opacity={0.04}
+        opacity={0.027}
       />
     </mesh>
   );
@@ -132,9 +145,9 @@ function Lights() {
 
   useFrame((state) => {
     if (reduced || !ref.current) return;
-    ref.current.intensity = 1.2 + Math.sin(state.clock.elapsedTime * 0.7) * 0.3;
-    ref.current.position.x = 3.2 + Math.sin(state.clock.elapsedTime * 0.4) * 0.6;
-    ref.current.position.y = 0.4 + Math.cos(state.clock.elapsedTime * 0.3) * 0.4;
+    ref.current.intensity = 1.2 + Math.sin(state.clock.elapsedTime * 0.55) * 0.2;
+    ref.current.position.x = 3.2 + Math.sin(state.clock.elapsedTime * 0.34) * 0.45;
+    ref.current.position.y = 0.4 + Math.cos(state.clock.elapsedTime * 0.27) * 0.32;
   });
 
   return (
@@ -161,20 +174,39 @@ function Lights() {
 
 // ── Scene canvas ─────────────────────────────────────────────
 export default function HeroScene() {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    }, { rootMargin: '80px 0px', threshold: 0.01 });
+
+    observer.observe(scene);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <Canvas
-      camera={{ position: [0, 0, 7], fov: 55 }}
-      style={{ position: 'absolute', inset: 0 }}
-      gl={{ antialias: true, alpha: true }}
-      dpr={[1, 1.5]}
-    >
-      <Lights />
-      <ParticleField count={500} />
-      <CentralOrb />
-      <OrbitalRing radius={2.0} thickness={0.008} speed={0.18} color="#3dffa0" axis="y" />
-      <OrbitalRing radius={2.7} thickness={0.006} speed={-0.12} color="#3dffa0" axis="x" />
-      <OrbitalRing radius={3.3} thickness={0.004} speed={0.08} color="#82ffcc" axis="z" />
-      <TechGridPlane />
-    </Canvas>
+    <div ref={sceneRef} style={{ position: 'absolute', inset: 0 }}>
+      <Canvas
+        camera={{ position: [0, 0, 7], fov: 55 }}
+        style={{ position: 'absolute', inset: 0 }}
+        gl={{ antialias: true, alpha: true }}
+        dpr={[1, 1.5]}
+        frameloop={reducedMotion ? 'demand' : isVisible ? 'always' : 'never'}
+      >
+        <Lights />
+        <ParticleField count={500} />
+        <CentralOrb />
+        <OrbitalRing radius={2.0} thickness={0.008} speed={0.18} color="#3dffa0" axis="y" />
+        <OrbitalRing radius={2.7} thickness={0.006} speed={-0.12} color="#3dffa0" axis="x" />
+        <OrbitalRing radius={3.3} thickness={0.004} speed={0.08} color="#82ffcc" axis="z" />
+        <TechGridPlane />
+      </Canvas>
+    </div>
   );
 }

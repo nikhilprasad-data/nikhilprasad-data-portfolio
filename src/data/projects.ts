@@ -3,6 +3,7 @@
 export interface Project {
   id: string;
   number: string;
+  featured?: boolean;
   title: string;
   shortTitle: string;
   description: string;
@@ -11,6 +12,8 @@ export interface Project {
   github: string;
   live: string;
   visualType: 'pii' | 'commit' | 'vizosyn' | 'trade' | 'multiagent';
+  thumbnail?: string;
+  thumbnailAlt?: string;
   accentColor: string;
   category: string;
 }
@@ -19,18 +22,21 @@ export const PROJECTS: Project[] = [
   {
     id: 'pii-compliance-gateway',
     number: '01',
+    featured: true,
     title: 'PII Compliance Gateway',
     shortTitle: 'PII Gateway',
     description:
-      'Automated pipeline that detects, classifies, and redacts personally identifiable information from unstructured data streams in real time.',
+      'A FastAPI gateway that detects and redacts sensitive data before it reaches logs or downstream systems.',
     longDescription:
-      'A high-throughput compliance engine built with FastAPI and LangChain. Ingests raw documents, runs multi-stage NLP detection, applies field-level redaction policies, and emits audit-ready protected output — all at sub-200ms p99 latency.',
-    technologies: ['Python', 'FastAPI', 'LangChain', 'PostgreSQL', 'Docker', 'Redis'],
-    github: 'https://github.com/placeholder/pii-gateway',
-    live: '',
+      'A FastAPI gateway uses a LangGraph workflow to identify sensitive values before Python applies redactions. Identical inputs are cached in Redis, while PostgreSQL stores sanitized audit metadata without retaining raw input.',
+    technologies: ['Python', 'FastAPI', 'LangGraph', 'Gemini', 'Redis', 'PostgreSQL'],
+    github: 'https://github.com/nikhilprasad-data/pii-compliance-gateway-api',
+    live: 'https://pii-compliance-gateway-client.vercel.app/',
     visualType: 'pii',
+    thumbnail: '/projects/pii-compliance-gateway_thumbnail.png',
+    thumbnailAlt: 'PII Compliance Gateway interface showing sensitive data detection and redaction.',
     accentColor: '#3dffa0',
-    category: 'Backend · AI · Compliance',
+    category: 'AI · Backend · Data Privacy',
   },
   {
     id: 'commit-message-validator',
@@ -51,18 +57,21 @@ export const PROJECTS: Project[] = [
   {
     id: 'vizosyn',
     number: '03',
+    featured: true,
     title: 'VizoSyn',
     shortTitle: 'VizoSyn',
     description:
-      'Skill-based developer matchmaking platform that visualizes professional networks and surfaces compatible collaborators through graph analysis.',
+      'Helps hackathon participants find teammates with complementary skills and project interests under tight deadlines.',
     longDescription:
-      'A full-stack graph application backed by PostgreSQL and a custom graph traversal engine. Profiles are skill-node vectors; the matching algorithm finds structural similarity across the collaboration graph and ranks potential collaborators by compatibility score.',
-    technologies: ['Python', 'FastAPI', 'PostgreSQL', 'Graph DB', 'React', 'Docker'],
-    github: 'https://github.com/placeholder/vizosyn',
-    live: '',
+      'A developer matchmaking platform built with FastAPI and PostgreSQL. JWT-protected profiles and team dashboards use relational constraints to handle duplicate requests and conflicting team membership actions.',
+    technologies: ['Python', 'FastAPI', 'PostgreSQL', 'SQLAlchemy', 'JWT', 'React'],
+    github: 'https://github.com/nikhilprasad-data/vizosyn_backend',
+    live: 'https://vizosyn-frontend.vercel.app/',
     visualType: 'vizosyn',
+    thumbnail: '/projects/vizosyn_thumbnail.png',
+    thumbnailAlt: 'VizoSyn interface showing developer profiles and team matching screens.',
     accentColor: '#3dffa0',
-    category: 'Full Stack · Graph · Social',
+    category: 'Backend · Full Stack · Collaboration',
   },
   {
     id: 'trade-validator',

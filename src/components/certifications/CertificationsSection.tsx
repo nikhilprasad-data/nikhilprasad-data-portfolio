@@ -23,8 +23,6 @@ export default function CertificationsSection() {
       aria-label="Certifications and achievements"
     >
       <div className={styles.inner}>
-        <span className={styles.eyebrow}>&mdash; 07 / CERTIFICATIONS &amp; ACHIEVEMENTS</span>
-
         <div key={certification.id} className={styles.showcase}>
           <article className={styles.identity}>
             <span className={styles.certIndex}>{number}</span>

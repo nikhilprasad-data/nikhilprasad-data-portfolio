@@ -36,10 +36,6 @@ export default function AboutSection() {
       <div className={styles.grid}>
         {/* Left — oversized text */}
         <div className={styles.left}>
-          <p className={`eyebrow ${styles.reveal}`}>
-            — 01 / Identity
-          </p>
-
           <h2 className={`${styles.headline} ${styles.reveal}`}>
             I build systems
             <br />
@@ -79,19 +75,16 @@ export default function AboutSection() {
                   <div className={styles.np0}>
                     <div className={styles.nc1}>
                       <span className={styles.nodeDot} />
-                      <span className={styles.nodeLabel}>Python</span>
                     </div>
                   </div>
                   <div className={styles.np1}>
                     <div className={styles.nc1}>
                       <span className={styles.nodeDot} />
-                      <span className={styles.nodeLabel}>FastAPI</span>
                     </div>
                   </div>
                   <div className={styles.np2}>
                     <div className={styles.nc1}>
                       <span className={styles.nodeDot} />
-                      <span className={styles.nodeLabel}>LangChain</span>
                     </div>
                   </div>
                 </div>
@@ -102,19 +95,16 @@ export default function AboutSection() {
                   <div className={styles.np3}>
                     <div className={styles.nc2}>
                       <span className={styles.nodeDot2} />
-                      <span className={styles.nodeLabel2}>LangGraph</span>
                     </div>
                   </div>
                   <div className={styles.np4}>
                     <div className={styles.nc2}>
                       <span className={styles.nodeDot2} />
-                      <span className={styles.nodeLabel2}>AI</span>
                     </div>
                   </div>
                   <div className={styles.np5}>
                     <div className={styles.nc2}>
                       <span className={styles.nodeDot2} />
-                      <span className={styles.nodeLabel2}>Data Science</span>
                     </div>
                   </div>
                 </div>
@@ -129,6 +119,14 @@ export default function AboutSection() {
             <div className={`${styles.contentBox} ${styles.reveal}`} aria-label="Engineering identity content area">
               <div className={styles.contentBoxCornerTL} aria-hidden="true" />
               <div className={styles.contentBoxCornerBR} aria-hidden="true" />
+              <ul className={styles.identitySignals} aria-label="Technical identity markers">
+                {['Python', 'FastAPI', 'LangChain', 'LangGraph', 'AI', 'Data Science'].map((technology) => (
+                  <li className={styles.identitySignal} key={technology}>
+                    <span className={styles.signalDot} aria-hidden="true" />
+                    {technology}
+                  </li>
+                ))}
+              </ul>
               {/* Energy particles — 4 per edge + 8 ambient, originate from box perimeter */}
               {Array.from({ length: 24 }, (_, i) => (
                 <span

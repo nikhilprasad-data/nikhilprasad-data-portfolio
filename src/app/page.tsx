@@ -10,7 +10,8 @@ import ContactSection from '@/components/contact/ContactSection';
 
 export default function HomePage() {
   return (
-    <main>
+    <main className="page-environment">
+      <div className="page-atmosphere" aria-hidden="true" />
       <Navbar />
       <Hero />
       <AboutSection />

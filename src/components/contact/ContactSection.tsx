@@ -1,63 +1,40 @@
-'use client';
-
-import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { ArrowUpRight, FileText, Mail } from 'lucide-react';
 import styles from './ContactSection.module.css';
 
 type ContactLink = {
   label: string;
   value: string;
-  action: string;
   href: string;
-  icon: 'email' | 'linkedin' | 'github' | 'resume';
+  icon: 'email' | 'linkedin' | 'resume';
   external?: boolean;
 };
 
 const CONTACT_LINKS: ContactLink[] = [
   {
-    label: 'EMAIL',
-    value: 'contact.nikhilprasad@gmail.com',
-    action: 'Send Email',
-    href: 'mailto:contact.nikhilprasad@gmail.com?subject=Portfolio%20Inquiry%20%E2%80%94%20Nikhil%20Prasad',
-    icon: 'email',
-  },
-  {
-    label: 'LINKEDIN',
-    value: 'www.linkedin.com/in/nikhilprasad-data',
-    action: 'View Profile',
+    label: 'LinkedIn',
+    value: '/in/nikhilprasad-data',
     href: 'https://www.linkedin.com/in/nikhilprasad-data',
     icon: 'linkedin',
     external: true,
   },
   {
-    label: 'GITHUB',
-    value: 'github.com/nikhilprasad-data',
-    action: 'Explore GitHub',
-    href: 'https://github.com/nikhilprasad-data',
-    icon: 'github',
-    external: true,
+    label: 'Email',
+    value: 'contact.nikhilprasad@gmail.com',
+    href: 'mailto:contact.nikhilprasad@gmail.com',
+    icon: 'email',
   },
   {
-    label: 'RESUME',
-    value: 'View / Download Resume',
-    action: 'Open Resume',
+    label: 'Resume',
+    value: 'View / Download',
     href: '/resume.pdf',
     icon: 'resume',
-    external: true,
   },
 ];
 
 function ContactIcon({ icon }: { icon: ContactLink['icon'] }) {
   if (icon === 'email') return <Mail aria-hidden="true" />;
   if (icon === 'resume') return <FileText aria-hidden="true" />;
-
-  if (icon === 'github') {
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-      </svg>
-    );
-  }
 
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -67,23 +44,6 @@ function ContactIcon({ icon }: { icon: ContactLink['icon'] }) {
 }
 
 export default function ContactSection() {
-  const headlineRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const headline = headlineRef.current;
-    if (!headline) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) headline.classList.add(styles.headlineVisible);
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(headline);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section id="contact" className={styles.section} aria-labelledby="contact-title">
       <div className={styles.atmosphere} aria-hidden="true">
@@ -93,17 +53,12 @@ export default function ContactSection() {
         <span className={`${styles.particle} ${styles.particleFour}`} />
         <span className={`${styles.particle} ${styles.particleFive}`} />
         <span className={`${styles.particle} ${styles.particleSix}`} />
-        <span className={`${styles.particle} ${styles.particleSeven}`} />
-        <span className={`${styles.particle} ${styles.particleEight}`} />
       </div>
 
       <div className={styles.inner}>
         <header className={styles.intro}>
-          <span className="eyebrow">— 09 / CONTACT</span>
-
-          <h2 id="contact-title" ref={headlineRef} className={styles.headline}>
-            <span>Let&apos;s build</span>
-            <span><em className={styles.accent}>something.</em></span>
+          <h2 id="contact-title" className={styles.headline}>
+            Let&apos;s build <span>something.</span>
           </h2>
 
           <p className={styles.availability}>
@@ -112,30 +67,57 @@ export default function ContactSection() {
           <p className={styles.location}>India · Open to relocate to Delhi NCR</p>
         </header>
 
-        <nav className={styles.linksGrid} aria-label="Contact options">
-          {CONTACT_LINKS.map((link) => (
-            <a
-              key={link.label}
-              className={styles.contactCard}
-              href={link.href}
-              target={link.external ? '_blank' : undefined}
-              rel={link.external ? 'noopener noreferrer' : undefined}
-              aria-label={`${link.label}: ${link.value}. ${link.action}`}
-            >
-              <span className={styles.cardTop}>
-                <span className={styles.cardLabel}>{link.label}</span>
-                <span className={styles.cardIcon}><ContactIcon icon={link.icon} /></span>
+        <div className={styles.content}>
+          <a
+            className={styles.githubVisual}
+            href="https://github.com/nikhilprasad-data"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit Nikhil Prasad's GitHub profile"
+          >
+            <span className={styles.visualGlow} aria-hidden="true" />
+            <Image
+              className={styles.visualImage}
+              src="/contact/github-contact-visual.png"
+              alt="GitHub at the center of an orbital composition of development and AI tools"
+              width={1672}
+              height={941}
+              sizes="(max-width: 680px) 100vw, (max-width: 1050px) 48vw, 560px"
+              priority
+            />
+            <span className={styles.githubCta}>
+              <span className={styles.githubBrand}>
+                <span className={styles.githubIcon} aria-hidden="true">
+                  <Image src="/tech-logos/github.svg" alt="" width={22} height={22} />
+                </span>
+                <span>GitHub</span>
               </span>
+              <ArrowUpRight className={styles.githubArrow} aria-hidden="true" />
+            </span>
+          </a>
 
-              <span className={styles.cardValue}>{link.value}</span>
-
-              <span className={styles.cardAction}>
-                <span>{link.action}</span>
+          <nav className={styles.linksStack} aria-label="Contact options">
+            {CONTACT_LINKS.map((link) => (
+              <a
+                key={link.label}
+                className={styles.contactCard}
+                href={link.href}
+                target={link.external ? '_blank' : undefined}
+                rel={link.external ? 'noopener noreferrer' : undefined}
+                aria-label={`${link.label}: ${link.value}`}
+              >
+                <span className={styles.cardIcon}>
+                  <ContactIcon icon={link.icon} />
+                </span>
+                <span className={styles.cardCopy}>
+                  <span className={styles.cardLabel}>{link.label}</span>
+                  <span className={styles.cardValue}>{link.value}</span>
+                </span>
                 <ArrowUpRight className={styles.actionArrow} aria-hidden="true" />
-              </span>
-            </a>
-          ))}
-        </nav>
+              </a>
+            ))}
+          </nav>
+        </div>
       </div>
     </section>
   );
